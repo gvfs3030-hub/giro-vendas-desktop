@@ -1,0 +1,56 @@
+# [LOCAL] Gera o build do Giro Vendas Desktop (Windows) 100% na nuvem do GitHub,
+# sem precisar de nenhum computador Windows local nem instalar Visual Studio.
+#
+# Como usar: na aba "Actions" do repositório, clique em "Build Windows App" na
+# barra lateral e depois no botão "Run workflow". Quando terminar (bolinha verde),
+# entre na execução e baixe o arquivo em "Artifacts" lá embaixo.
+name: Build Windows App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate native Windows project
+        run: npx react-native-windows-init --overwrite
+
+      - name: Build Release (x64)
+        run: npx react-native run-windows --arch x64 --release --no-launch --no-deploy --no-packager --logging
+
+      - name: List build output (debug helper)
+        if: always()
+        shell: pwsh
+        run: |
+          if (Test-Path windows) {
+            Get-ChildItem -Recurse windows | Select-Object FullName | Format-Table -AutoSize
+          } else {
+            Write-Host "Pasta windows/ não foi criada — o passo react-native-windows-init pode ter falhado."
+          }
+
+      - name: Upload build output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GiroVendasDesktop-Windows-x64
+          path: |
+            windows/**/*.exe
+            windows/**/*.dll
+            windows/**/*.pri
+            windows/**/*.winmd
+            windows/**/Bundle/**
+            windows/**/AppPackages/**
+          if-no-files-found: warn
+          retention-days: 14
