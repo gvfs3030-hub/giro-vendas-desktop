@@ -1,9 +1,3 @@
-# [LOCAL] Gera o build do Giro Vendas Desktop (Windows) 100% na nuvem do GitHub,
-# sem precisar de nenhum computador Windows local nem instalar Visual Studio.
-#
-# Como usar: na aba "Actions" do repositório, clique em "Build Windows App" na
-# barra lateral e depois no botão "Run workflow". Quando terminar (bolinha verde),
-# entre na execução e baixe o arquivo em "Artifacts" lá embaixo.
 name: Build Windows App
 
 on:
@@ -24,6 +18,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Patch react-native-fs (conserto do codegen-windows)
+        run: node tools/patch-rnfs.js
+
+      - name: Diagnostico do codegen na biblioteca de arquivos
+        continue-on-error: true
+        working-directory: node_modules/@dr.pogodin/react-native-fs
+        run: npx --yes @react-native-community/cli codegen-windows --logging
+
       - name: Generate native Windows project
         run: npx react-native init-windows --overwrite
 
@@ -37,7 +39,7 @@ jobs:
           if (Test-Path windows) {
             Get-ChildItem -Recurse windows | Select-Object FullName | Format-Table -AutoSize
           } else {
-            Write-Host "Pasta windows/ não foi criada — o passo react-native-windows-init pode ter falhado."
+            Write-Host "Pasta windows/ não foi criada."
           }
 
       - name: Upload build output
