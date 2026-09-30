@@ -28,7 +28,7 @@ jobs:
         run: npx react-native init-windows --overwrite
 
       - name: Build Release (x64)
-        run: npx react-native run-windows --arch x64 --release --no-launch --no-deploy --no-packager --logging
+        run: npx react-native run-windows --arch x64 --release --no-launch --no-deploy --no-packager --logging --msbuildprops WindowsTargetPlatformVersion=10.0
 
       - name: List build output (debug helper)
         if: always()
