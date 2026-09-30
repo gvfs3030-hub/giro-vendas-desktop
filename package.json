@@ -1,0 +1,30 @@
+{
+  "name": "giro-vendas-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "windows": "react-native run-windows",
+    "start": "react-native start",
+    "test": "node --no-warnings -r ts-node/register/transpile-only --test tools/tests/*.test.ts"
+  },
+  "dependencies": {
+    "react": "19.2.3",
+    "react-native": "0.84.1",
+    "react-native-windows": "0.84.0",
+
+    "sql.js": "^1.13.0",
+    "pdf-lib": "^1.17.1",
+    "@dr.pogodin/react-native-fs": "^2.34.1",
+    "react-native-toast-message": "^2.5.2",
+    "react-native-vector-icons": "^10.3.0"
+  },
+  "devDependencies": {
+    "@react-native/metro-config": "0.84.1",
+    "@types/react": "~19.2.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.9.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
