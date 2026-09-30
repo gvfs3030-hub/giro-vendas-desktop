@@ -29,6 +29,9 @@ jobs:
       - name: Generate native Windows project
         run: npx react-native init-windows --overwrite
 
+      - name: Testar bundle do Metro (falha cedo e mostra o erro real)
+        run: npx react-native bundle --platform windows --entry-file index.js --bundle-output "$env:RUNNER_TEMP\test.windows.bundle" --dev false --reset-cache
+
       - name: Build Release (x64)
         run: npx react-native run-windows --arch x64 --release --no-launch --no-deploy --no-packager --logging --msbuildprops WindowsTargetPlatformVersion=10.0
 
